@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Informasi Warga Perumahan</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #333;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 100vh;
+      background: #1769aa;
+      color: white;
+      padding: 25px 15px;
+      z-index: 10;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .logo .icon {
+      font-size: 45px;
+    }
+
+    .logo h2 {
+      margin-top: 8px;
+      font-size: 20px;
+    }
+
+    .logo p {
+      font-size: 12px;
+      opacity: .8;
+      margin-top: 5px;
+    }
+
+    .menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 13px 15px;
+      margin: 6px 0;
+      border-radius: 8px;
+      transition: .3s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+      background: rgba(255,255,255,.18);
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 250px;
+      padding: 25px;
+    }
+
+    .topbar {
+      background: white;
+      padding: 18px 25px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
+    }
+
+    .topbar h1 {
+      font-size: 24px;
+      color: #1769aa;
+    }
+
+    .user {
+      background: #e8f3ff;
+      padding: 10px 15px;
+      border-radius: 20px;
+      color: #1769aa;
+      font-weight: bold;
+    }
+
+    /* STATISTIK */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .card-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 27px;
+    }
+
+    .blue { background: #e2f0ff; }
+    .green { background: #e4f8eb; }
+    .orange { background: #fff0d9; }
+    .red { background: #ffe6e6; }
+
+    .card h3 {
+      font-size: 25px;
+      color: #222;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: #777;
+      margin-top: 3px;
+    }
+
+    /* CONTENT */
+    .content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.06);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .panel-header h2 {
+      font-size: 18px;
+      color: #1769aa;
+    }
+
+    .btn {
+      border: none;
+      padding: 9px 15px;
+      background: #1769aa;
+      color: white;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #0e578e;
+    }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+
+    th {
+      color: #666;
+      background: #f8fafc;
+    }
+
+    .status {
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+    }
+
+    .aktif {
+      background: #dff7e7;
+      color: #198754;
+    }
+
+    /* PENGUMUMAN */
+    .announcement {
+      padding: 13px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .announcement:last-child {
+      border-bottom: none;
+    }
+
+    .announcement h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .announcement p {
+      font-size: 12px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    .date {
+      color: #1769aa;
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    /* AGENDA */
+    .agenda {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .agenda-date {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #1769aa;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .agenda-date strong {
+      font-size: 17px;
+    }
+
+    .agenda-date span {
+      font-size: 9px;
+    }
+
+    .agenda h3 {
+      font-size: 13px;
+    }
+
+    .agenda p {
+      font-size: 11px;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width: 1000px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width: 700px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 15px;
+      }
+
+      .menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+
+      .menu a {
+        margin: 0;
+      }
+
+      .topbar {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 600px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="icon">🏘️</div>
+      <h2>Warga Perumahan</h2>
+      <p>Sistem Informasi Warga</p>
+    </div>
+
+    <nav class="menu">
+      <a href="#" class="active">🏠 Dashboard</a>
+      <a href="#warga">👨‍👩‍👧 Data Warga</a>
+      <a href="#pengumuman">📢 Pengumuman</a>
+      <a href="#agenda">📅 Agenda</a>
+      <a href="#kontak">📞 Kontak Pengurus</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="topbar">
+      <div>
+        <h1>Dashboard Warga</h1>
+        <p>Selamat datang di Sistem Informasi Warga Perumahan</p>
+      </div>
+
+      <div class="user">
+        👤 Admin / Pengurus
+      </div>
+    </div>
+
+    <!-- STATISTIK -->
+    <section class="cards">
+
+      <div class="card">
+        <div class="card-icon blue">👨‍👩‍👧</div>
+        <div>
+          <h3>128</h3>
+          <p>Total Kepala Keluarga</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon green">👥</div>
+        <div>
+          <h3>356</h3>
+          <p>Total Warga</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon orange">🏠</div>
+        <div>
+          <h3>135</h3>
+          <p>Total Rumah</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon red">📢</div>
+        <div>
+          <h3>5</h3>
+          <p>Pengumuman Baru</p>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="content">
+
+      <!-- KOLOM KIRI -->
+      <div>
+
+        <!-- DATA WARGA -->
+        <section class="panel" id="warga">
+
+          <div class="panel-header">
+            <h2>👥 Data Warga Terbaru</h2>
+            <button class="btn" onclick="tambahWarga()">+ Tambah</button>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Blok</th>
+                <th>Status</th>
+                <th>No. HP</th>
+              </tr>
+            </thead>
+
+            <tbody id="dataWarga">
+              <tr>
+                <td>1</td>
+                <td>Budi Santoso</td>
+                <td>A-01</td>
+                <td><span class="status aktif">Aktif</span></td>
+                <td>0812-xxxx-1234</td>
+              </tr>
+
+              <tr>
+                <td>2</td>
+                <td>Siti Aminah</td>
+                <td>A-02</td>
+                <td><span class="status aktif">Aktif</span></td>
+                <td>0813-xxxx-5678</td>
+              </tr>
+
+              <tr>
+                <td>3</td>
+                <td>Andi Wijaya</td>
+                <td>B-05</td>
+                <td><span class="status aktif">Aktif</span></td>
+                <td>0857-xxxx-4321</td>
+              </tr>
+
+              <tr>
+                <td>4</td>
+                <td>Dewi Lestari</td>
+                <td>B-08</td>
+                <td><span class="status aktif">Aktif</span></td>
+                <td>0821-xxxx-9876</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </section>
+
+        <!-- PENGUMUMAN -->
+        <section class="panel" id="pengumuman">
+
+          <div class="panel-header">
+            <h2>📢 Pengumuman Warga</h2>
+            <button class="btn" onclick="lihatSemua()">Lihat Semua</button>
+          </div>
+
+          <div class="announcement">
+            <h3>Kerja Bakti Lingkungan</h3>
+            <p>
+              Akan dilaksanakan kerja bakti membersihkan lingkungan
+              perumahan pada hari Minggu pagi.
+            </p>
+            <div class="date">📅 15 September 2026</div>
+          </div>
+
+          <div class="announcement">
+            <h3>Rapat Warga Bulanan</h3>
+            <p>
+              Rapat warga akan dilaksanakan di Balai Warga.
+              Diharapkan seluruh kepala keluarga dapat hadir.
+            </p>
+            <div class="date">📅 20 September 2026</div>
+          </div>
+
+          <div class="announcement">
+            <h3>Pembayaran Iuran Bulanan</h3>
+            <p>
+              Mohon melakukan pembayaran iuran keamanan dan kebersihan
+              sebelum tanggal 25 setiap bulan.
+            </p>
+            <div class="date">📅 25 September 2026</div>
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- KOLOM KANAN -->
+      <div>
+
+        <!-- AGENDA -->
+        <section class="panel" id="agenda">
+
+          <div class="panel-header">
+            <h2>📅 Agenda</h2>
+          </div>
+
+          <div class="agenda">
+            <div class="agenda-date">
+              <strong>15</strong>
+              <span>SEP</span>
+            </div>
+            <div>
+              <h3>Kerja Bakti</h3>
+              <p>07.00 WIB • Lapangan Perumahan</p>
+            </div>
+          </div>
+
+          <div class="agenda">
+            <div class="agenda-date">
+              <strong>20</strong>
+              <span>SEP</span>
+            </div>
+            <div>
+              <h3>Rapat Warga</h3>
+              <p>19.30 WIB • Balai Warga</p>
+            </div>
+          </div>
+
+          <div class="agenda">
+            <div class="agenda-date">
+              <strong>28</strong>
+              <span>SEP</span>
+            </div>
+            <div>
+              <h3>Senam Bersama</h3>
+              <p>06.30 WIB • Lapangan</p>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- KONTAK -->
+        <section class="panel" id="kontak">
+
+          <div class="panel-header">
+            <h2>📞 Pengurus</h2>
+          </div>
+
+          <div class="announcement">
+            <h3>Ketua RT</h3>
+            <p>Budi Santoso</p>
+            <p>📱 0812-xxxx-1234</p>
+          </div>
+
+          <div class="announcement">
+            <h3>Sekretaris</h3>
+            <p>Siti Aminah</p>
+            <p>📱 0813-xxxx-5678</p>
+          </div>
+
+          <div class="announcement">
+            <h3>Bendahara</h3>
+            <p>Andi Wijaya</p>
+            <p>📱 0857-xxxx-4321</p>
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    function tambahWarga() {
+      const nama = prompt("Masukkan nama warga:");
+      if (!nama) return;
+
+      const blok = prompt("Masukkan blok/nomor rumah:");
+
+      const table = document.getElementById("dataWarga");
+      const nomor = table.rows.length + 1;
+
+      const row = table.insertRow();
+
+      row.innerHTML = `
+        <td>${nomor}</td>
+        <td>${nama}</td>
+        <td>${blok || "-"}</td>
+        <td><span class="status aktif">Aktif</span></td>
+        <td>-</td>
+      `;
+
+      alert("Data warga berhasil ditambahkan!");
+    }
+
+    function lihatSemua() {
+      alert("Halaman daftar pengumuman akan tersedia pada pengembangan berikutnya.");
+    }
+  </script>
+
+</body>
+</html>
